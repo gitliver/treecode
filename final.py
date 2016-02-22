@@ -9,7 +9,7 @@ import numpy as np
 import helpers
 from save_data import Counts
 import os
-
+import sys
 
 sns.set_style('whitegrid')
 dirplots = os.path.join(os.curdir, 'plots')
@@ -220,7 +220,8 @@ def main():
 
     for i, name in enumerate(names):
         print('\nDoing '+name+'.....')
-        data = Counts(os.path.join(os.curdir, 'counts_'+name+'.dat'))
+        # user provided file
+        data = Counts(sys.argv[1])
 
         counts = data.counts
         ranks = data.ranks
