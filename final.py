@@ -8,12 +8,18 @@ from scipy import stats, optimize
 import numpy as np
 import helpers
 from save_data import Counts
-import os
-import sys
+import os, sys, subprocess, uuid
+
+# user provided file
+myfile = sys.argv[1]
+# the SGE job id
+#myid = subprocess.check_output('echo -n $JOB_ID', shell=True)
+myid = os.environ['JOB_ID']
+#myid = str(uuid.uuid1())
 
 sns.set_style('whitegrid')
-dirplots = os.path.join(os.curdir, 'plots')
-dirdata = os.path.join(os.curdir, 'all_data')
+# dirplots = os.path.join(os.curdir, 'plots')
+# dirdata = os.path.join(os.curdir, 'all_data')
 
 
 def bpl(x, xc, a, b):
@@ -220,8 +226,7 @@ def main():
 
     for i, name in enumerate(names):
         print('\nDoing '+name+'.....')
-        # user provided file
-        data = Counts(sys.argv[1])
+        data = Counts(myfile)
 
         counts = data.counts
         ranks = data.ranks
@@ -247,11 +252,11 @@ def main():
         print('Ratio Q/Chao: ', factor * data.Ncat/chao_est)
         print('Sigma/Est for Chao: ', chao_sigma/chao_est)
         fig = plot_KL(data)
-        plt.savefig('KL_plot.png')
+        plt.savefig('KL_plot' + myid + '.png')
         fig = plot_loglog(data)
-        plt.savefig('loglog_plot.png')
+        plt.savefig('loglog_plot' + myid + '.png')
         fig = plot_loglin(data)
-        plt.savefig('loglin_plot.png')
+        plt.savefig('loglin_plot' + myid + '.png')
 
 if __name__ == "__main__":
     main()
